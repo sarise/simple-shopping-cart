@@ -1,0 +1,37 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                               controllers.Application.index
+
+GET     /user/all                       controllers.Application.all
+
+POST    /user                           controllers.Application.createUser
+GET     /user/:id                       controllers.Application.findUserById(id: Long)
+PUT     /user/:id                       controllers.Application.updateUser(id: Long)
+DELETE  /user/:id                       controllers.Application.deleteUser(id: Long)
+
+POST    /user/:uid/purchase             controllers.Application.createPurchase(uid: Long)
+
+GET     /purchase/:pid                  controllers.Application.findPurchaseById(pid: Long)
+PUT     /purchase/:pid                  controllers.Application.updatePurchase(pid: Long)
+DELETE  /purchase/:pid                  controllers.Application.deletePurchase(pid: Long)
+
+
+GET     /purchase/:uid/cart/all         controllers.Application.getCarts(uid: Long)
+
+POST    /purchase/:uid/cart             controllers.Application.addCart(uid: Long)
+GET     /purchase/:uid/cart/:cid        controllers.Application.findCartById(uid: Long, cid: Long)
+PUT     /purchase/:uid/cart/:cid        controllers.Application.updateCart(uid: Long, cid: Long)
+DELETE  /purchase/:uid/cart/:cid        controllers.Application.deleteCart(uid: Long, cid: Long)
+
+GET     /item/all                       controllers.Application.getItems
+
+POST    /item                          controllers.Application.createItem
+GET     /item/:id                      controllers.Application.findItemById(id: Long)
+PUT     /item/:id                      controllers.Application.updateItem(id: Long)
+DELETE  /item/:id                      controllers.Application.deleteItem(id: Long)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
