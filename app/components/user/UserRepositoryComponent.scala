@@ -33,8 +33,6 @@ trait UserRepositoryComponentImpl extends UserRepositoryComponent {
 
     class UserRepositoryImpl extends UserRepository {
 
-        val idSequence = new AtomicLong(0)
-
         val user = {
             get[Option[Long]]("id") ~
               get[String]("email") map {
@@ -47,16 +45,14 @@ trait UserRepositoryComponentImpl extends UserRepositoryComponent {
         }
 
         override def createUser(user: User): User = {
-            val newId = idSequence.incrementAndGet()
-            val createdUser = user.copy(id = Option(newId))
 
-            DB.withConnection { implicit c =>
-                SQL("insert into user (id, email) values ({id}, {email})").on(
-                    'id -> createdUser.id,
-                    'email -> createdUser.email
-                ).executeUpdate()
+            val generatedId : Option[Long] = DB.withConnection { implicit c =>
+                SQL("insert into user (email) values ({email})").on(
+                    'email -> user.email
+                ).executeInsert()
             }
 
+            val createdUser = user.copy(id = generatedId)
             createdUser
         }
 

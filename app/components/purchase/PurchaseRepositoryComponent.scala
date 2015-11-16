@@ -32,8 +32,6 @@ trait PurchaseRepositoryComponentImpl extends PurchaseRepositoryComponent {
 
   class PurchaseRepositoryImpl extends PurchaseRepository {
 
-    val idSequence = new AtomicLong(0)
-
     val purchase = {
       get[Option[Long]]("id") ~
         get[Long]("userId") ~
@@ -42,16 +40,14 @@ trait PurchaseRepositoryComponentImpl extends PurchaseRepositoryComponent {
       }
     }
     override def createPurchase(purchase: Purchase): Purchase = {
-      val newId = idSequence.incrementAndGet()
-      val createdPurchase = purchase.copy(id = Option(newId))
 
-      DB.withConnection { implicit c =>
-        SQL("insert into purchase (id, userId, status) values ({id}, {userId}, {status})").on(
-          'id -> createdPurchase.id,
-          'userId -> createdPurchase.userId,
-          'status -> createdPurchase.status
-        ).executeUpdate()
+      val generatedId : Option[Long] = DB.withConnection { implicit c =>
+        SQL("insert into purchase (userId, status) values ({userId}, {status})").on(
+          'userId -> purchase.userId,
+          'status -> purchase.status
+        ).executeInsert()
       }
+      val createdPurchase = purchase.copy(id = generatedId)
 
       createdPurchase
     }

@@ -34,8 +34,8 @@ trait ItemController extends Controller {
   def createItem = Action(parse.json) {request =>
     unmarshalItemResource(request, (resource: ItemResource) => {
       val item = Item(Option.empty, resource.name, resource.price)
-      itemService.createItem(item)
-      Created
+      val createdItem = itemService.createItem(item)
+      Created(Json.toJson(createdItem))
     })
   }
 

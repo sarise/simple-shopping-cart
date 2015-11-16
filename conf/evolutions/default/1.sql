@@ -2,14 +2,15 @@
 
 # --- !Ups
 
-CREATE SEQUENCE task_id_seq;
+CREATE SEQUENCE user_id_seq;
 CREATE TABLE user (
-    id long,
+    id long NOT NULL DEFAULT nextval('user_id_seq'),
     email varchar(255)
 );
 
+CREATE SEQUENCE item_id_seq;
 CREATE TABLE item (
-    id long,
+    id long NOT NULL DEFAULT nextval('item_id_seq'),
     name varchar(255),
     price long
     );
@@ -20,8 +21,9 @@ CREATE TABLE cart (
     quantity int
     );
 
+CREATE SEQUENCE purchase_id_seq;
 CREATE TABLE purchase (
-    id  long,
+    id long NOT NULL DEFAULT nextval('purchase_id_seq'),
     userId long,
     status  varchar(255)
 );
@@ -32,4 +34,6 @@ DROP TABLE user;
 DROP TABLE item;
 DROP TABLE cart;
 DROP TABLE purchase;
-DROP SEQUENCE task_id_seq;
+DROP SEQUENCE user_id_seq;
+DROP SEQUENCE item_id_seq;
+DROP SEQUENCE purchase_id_seq;
